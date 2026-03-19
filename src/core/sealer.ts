@@ -140,17 +140,26 @@ export class ImageSealer {
   }
 
   /**
-   * Validates that the seal contains all required fields.
+   * Validates the structure and essential fields of an ANFA seal.
+   * 
+   * @param seal - The seal object to validate.
+   * @throws ANFAError if the seal structure is invalid.
    */
-  private validateSealStructure(seal: any): void {
+  private validateSealStructure(seal: unknown): void {
+    if (typeof seal !== 'object' || seal === null) {
+      throw new ANFAError('Invalid seal: must be an object', 'INVALID_SEAL');
+    }
+
+    const sealRecord = seal as Record<string, unknown>;
     const requiredFields = ['version', 'hash', 'algorithm', 'timestamp', 'imageSize', 'anfa'];
+
     for (const field of requiredFields) {
-      if (!(field in seal)) {
+      if (!(field in sealRecord)) {
         throw new ANFAError(`Invalid seal structure: Missing ${field}`, 'INVALID_SEAL');
       }
     }
-    
-    if (seal.anfa !== true) {
+
+    if (sealRecord['anfa'] !== true) {
       throw new ANFAError('Invalid seal: Not an ANFA seal', 'INVALID_SEAL');
     }
   }

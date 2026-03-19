@@ -49,16 +49,15 @@ export class ANFALayer {
 
       // 2. Metadata Stripping
       const cleanBuffer = await this.stripper.strip(inputPath);
-      const originalSize = fs.statSync(inputPath).size;
+      const originalStat = await fs.promises.stat(inputPath);
+      const originalSize = originalStat.size;
       const cleanSize = cleanBuffer.length;
 
       // 3. Sealing
       const seal = await this.sealer.generateSeal(cleanBuffer);
 
       // 4. Persistence
-      if (!fs.existsSync(outputDir)) {
-        fs.mkdirSync(outputDir, { recursive: true });
-      }
+      await fs.promises.mkdir(outputDir, { recursive: true });
 
       const fileName = path.basename(inputPath);
       const outputPath = path.join(outputDir, fileName);
@@ -105,6 +104,27 @@ export class ANFALayer {
       logger.error(`Verification process failed: ${errorMessage}`);
       return false;
     }
+  }
+
+  /**
+   * Deletes processed files after use — important for web/server deployments.
+   * Call this after sending the file to the user.
+   *
+   * @param outputPath - Path to the clean image file
+   * @param sealPath - Path to the .anfa.json seal file
+   */
+  public async cleanup(outputPath: string, sealPath: string): Promise<void> {
+    const deleteFile = async (filePath: string): Promise<void> => {
+      try {
+        await fs.promises.unlink(filePath);
+        logger.info(`Cleaned up: ${filePath}`);
+      } catch (error: unknown) {
+        const msg = error instanceof Error ? error.message : 'Unknown error';
+        logger.warn(`Cleanup failed for ${filePath}: ${msg}`);
+      }
+    };
+
+    await Promise.all([deleteFile(outputPath), deleteFile(sealPath)]);
   }
 }
 

@@ -37,7 +37,7 @@ export class MetadataStripper {
       if (normalizedFormat === 'jpeg' || normalizedFormat === 'jpg') {
         pipeline = pipeline.jpeg({ quality: 95 });
       } else if (normalizedFormat === 'png') {
-        pipeline = pipeline.png({ compressionLevel: 9, palette: true });
+        pipeline = pipeline.png({ compressionLevel: 9 });
       } else if (normalizedFormat === 'webp') {
         pipeline = pipeline.webp({ quality: 95 });
       } else if (normalizedFormat === 'tiff' || normalizedFormat === 'tif') {

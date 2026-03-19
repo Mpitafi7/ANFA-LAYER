@@ -32,7 +32,9 @@ export class ImageValidator {
   public async validate(filePath: string): Promise<ValidationResult> {
     try {
       // 1. Check if file exists
-      if (!fs.existsSync(filePath)) {
+      try {
+        await fs.promises.access(filePath, fs.constants.F_OK);
+      } catch {
         return { isValid: false, error: `File not found: ${filePath}` };
       }
 
@@ -80,12 +82,11 @@ export class ImageValidator {
    * @returns A promise that resolves to a ValidationResult.
    */
   private async verifyMagicBytes(filePath: string, extension: string): Promise<ValidationResult> {
-    const buffer = Buffer.alloc(12);
-    let fd: number | null = null;
+    const fileHandle = await fs.promises.open(filePath, 'r');
     
     try {
-      fd = fs.openSync(filePath, 'r');
-      fs.readSync(fd, buffer, 0, 12, 0);
+      const buffer = Buffer.alloc(12);
+      await fileHandle.read(buffer, 0, 12, 0);
 
       const hex = buffer.toString('hex').toUpperCase();
 
@@ -144,7 +145,7 @@ export class ImageValidator {
       const errorMessage = error instanceof Error ? error.message : 'Error reading magic bytes';
       return { isValid: false, error: `Magic bytes check failed: ${errorMessage}` };
     } finally {
-      if (fd !== null) fs.closeSync(fd);
+      await fileHandle.close();
     }
   }
 }
