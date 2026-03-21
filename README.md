@@ -4,10 +4,18 @@
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 ![Node.js](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)
-![Tests](https://img.shields.io/badge/tests-21%20passing-brightgreen)
 ![Formats](https://img.shields.io/badge/formats-8%20supported-blue)
+![Web App](https://img.shields.io/badge/Web%20App-Live-brightgreen?logo=vercel)
 
 > A security and privacy layer for images. Strips all metadata and seals images with SHA-256 cryptographic proof.
+
+## 🌐 Live Web App
+**Try it free in your browser — no installation required:**
+👉 **[anfalayer.vercel.app](https://anfalayer.vercel.app)**
+- Upload any image — see all hidden metadata exposed
+- Strip everything with one click
+- Download clean image + SHA-256 seal
+- 100% private — nothing leaves your browser
 
 ---
 
@@ -19,6 +27,8 @@ Every image you share contains hidden data:
 - **Camera model** — device fingerprint
 - **Timestamps** — when and where
 - **Software info** — tools used to edit
+- **Device serial number** — unique hardware fingerprint
+- **WiFi network name** — home/office network embedded in photo
 - **Hidden payloads** — malware can be embedded in image pixels
 
 No existing image format (JPEG, PNG, WebP, AVIF) solves this at the format level.
@@ -276,12 +286,17 @@ formats.test.ts    — 5 tests
 ---
 
 ## Roadmap
-
-- [ ] WebAssembly (WASM) version for browser/client-side use
+- [x] npm package published
+- [x] 8 formats supported
+- [x] 21 tests passing — 0 vulnerabilities
+- [x] GitHub Actions CI — Node 18, 20, 22
+- [x] Web app live at [anfalayer.vercel.app](https://anfalayer.vercel.app)
+- [ ] WebAssembly (WASM) version for faster browser processing
+- [ ] Batch processing — multiple images at once
+- [ ] Browser extension (Chrome + Firefox)
 - [ ] Zero-knowledge proof (zk-SNARK) provenance layer
 - [ ] Rust core rewrite for maximum performance
-- [ ] Browser extension
-- [ ] npm publish
+- [ ] Mobile SDK (iOS + Android)
 
 ---
 
@@ -298,7 +313,8 @@ MIT — see [LICENSE](LICENSE)
 ---
 
 ## Links
-
+- **Web App:** https://anfalayer.vercel.app
+- **npm:** https://www.npmjs.com/package/anfa-layer
 - **GitHub:** https://github.com/Mpitafi7/ANFA-LAYER
 - **Issues:** https://github.com/Mpitafi7/ANFA-LAYER/issues
 - **Security:** https://github.com/Mpitafi7/ANFA-LAYER/security/advisories/new
